@@ -6,8 +6,8 @@ services:
       - "5000:5000"
     networks:
       - giropops
-    environment:
-      - REDIS_HOST=redis
+    env_file:
+      - .env
     volumes:
       - strigus:/strigus
     depends_on:
