@@ -1,0 +1,41 @@
+version: "3.8"
+services:
+  giropops-senhas:
+    build: ./Dockerfile
+    ports:
+      - "5000:5000"
+    networks:
+      - giropops
+    environment:
+      - REDIS_HOST=redis
+    volumes:
+      - strigus:/strigus
+    depends_on:
+      - redis
+    labels:
+      - "com.docker.description=Giropops"
+    deploy:
+      resources:
+        reservations:
+          cpus: "0.01"
+          memory: 16M
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+  redis:
+    image: redis
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    networks:
+      - giropops
+    volumes:
+      - strigus:/strigus
+
+networks:
+  giropops:
+    driver: bridge
+
+volumes:
+  strigus:
